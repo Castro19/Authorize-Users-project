@@ -127,4 +127,3 @@ dist
 .pnp.*
 
 # Firebase
-firebase.ts
