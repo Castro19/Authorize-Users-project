@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { cn } from "@/lib/utils";
 import { IconBrandGoogle } from "@tabler/icons-react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 // Importing component
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
@@ -33,9 +33,6 @@ export function LoginFormDemo() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted");
-    console.log("Email: ", email);
-    console.log("Password: ", password);
 
     setSignInError("");
 
@@ -45,22 +42,39 @@ export function LoginFormDemo() {
     }
 
     if (!isSigningIn) {
-      setIsSigningIn(true);
-      await doSignInWithEmailAndPassword(email, password);
-      // doSendEmailVerification()
+      try {
+        setIsSigningIn(true);
+        await doSignInWithEmailAndPassword(email, password);
+        setSignInError(""); // Clear error on successful sign in
+        // Redirect to dashboard or home page after successful login if necessary
+      } catch (error) {
+        console.error(error);
+        setIsSigningIn(false); // Update signing in state upon error
+
+        // Check the error code and set a user-friendly error message
+        if (error.code === "auth/invalid-credential") {
+          setSignInError(
+            "The credentials you provided are invalid. Please try again."
+          );
+        } else {
+          // For other errors, you may want to display a generic error message
+          setSignInError(
+            "Failed to sign in. Please check your credentials and try again."
+          );
+        }
+      }
     }
-    // Here you would handle the actual sign-in logic, possibly sending data to a server
-    // Assuming a signIn API is called and handles these details:
-    // signIn({  email, password }).then(() => {
-    //   console.log("Signed up successfully!");
-    // }).catch(error => {
-    //   setSignInError("An error occurred during sign up: " + error.message);
-    // });
   };
 
-  const handleGoogleSignIn = () => {
-    console.log("Implement Google Sign in Logic");
+  const handleGoogleSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (!isSigningIn) {
+      setIsSigningIn(true);
+      await doSignInWithGoogle();
+      setIsSigningIn(false);
+    }
   };
+
   return (
     <div>
       {userLoggedIn && <Navigate to={"/home"} replace={true} />}
@@ -72,7 +86,7 @@ export function LoginFormDemo() {
           Login
         </p>
 
-        <form className="my-12" onSubmit={handleSubmit}>
+        <form className="my-8" onSubmit={handleSubmit}>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="email">Email Address</Label>
             <Input
@@ -102,22 +116,31 @@ export function LoginFormDemo() {
           </LabelInputContainer>
           {signInError ? <ErrorMessage text={signInError} /> : <></>}
           <button
-            className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full mt-8 text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+            className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full my-8 text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
             type="submit"
           >
             {isSigningIn ? "Signing In..." : "Sign In"}
             <BottomGradient />
           </button>
+          <p className="text-center text-sm">
+            Don't have an account?{" "}
+            <Link to={"/signup"} className="hover:underline font-bold">
+              Sign up
+            </Link>
+          </p>
+          <div className="flex flex-row text-center w-full my-4">
+            <div className="border-b-2 mb-2.5 mr-2 w-full"></div>
+            <div className="text-sm font-bold w-fit">OR</div>
+            <div className="border-b-2 mb-2.5 ml-2 w-full"></div>
+          </div>
 
-          <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
-
-          <div className="flex flex-col space-y-4">
+          <div className="flex flex-col">
             <button
-              onClick={handleGoogleSignIn}
+              onClick={(e) => handleGoogleSignIn(e)}
               className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
               type="button"
             >
-              <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
+              <IconBrandGoogle className="w-4 text-neutral-800 dark:text-neutral-300" />
               <span className="text-neutral-700 dark:text-neutral-300 text-sm">
                 Login in with Google
               </span>

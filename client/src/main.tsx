@@ -1,6 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 import { AuthProvider } from "@/contexts/authContext";
 
 import HomePage from "./pages/homepage/HomePage.tsx";
@@ -14,11 +18,12 @@ const router = createBrowserRouter([
     path: "/",
     element: <HomePage />,
     children: [
+      { index: true, element: <Navigate to="/signup" replace /> },
       { path: "/signup", element: <SignupFormDemo /> },
       { path: "/login", element: <LoginFormDemo /> },
-      { path: "/home", element: <Home /> },
     ],
   },
+  { path: "/home", element: <Home /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

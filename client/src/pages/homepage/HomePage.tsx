@@ -1,43 +1,19 @@
+// HomePage.tsx
 import React from "react";
-import { Button } from "../../components/ui/button";
-import { useNavigate, Outlet } from "react-router-dom";
-import { doSignOut } from "@/firebase/auth";
-import { useAuth } from "@/contexts/authContext";
+import { Outlet } from "react-router-dom";
+import TitleCard from "./TitleCard"; // Make sure the import path is correct
 
 const HomePage = () => {
-  let navigate = useNavigate();
-  const { userLoggedIn } = useAuth();
-
-  const handleSignOut = () => {
-    doSignOut().then(() => {
-      navigate("/");
-    });
-  };
   return (
-    <div>
-      {userLoggedIn ? (
-        <Button onClick={handleSignOut}> Sign Out</Button>
-      ) : (
-        <>
-          <Button
-            onClick={() => {
-              console.log("Shadcn UI Working");
-              navigate("/signup"); // Navigates to the login route
-            }}
-          >
-            Click Me to Sign up!
-          </Button>
-          <Button
-            onClick={() => {
-              console.log("Shadcn UI Working");
-              navigate("/login"); // Navigates to the login route
-            }}
-          >
-            Click Me to Login!
-          </Button>
-        </>
-      )}
-      <Outlet />
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-zinc-900">
+      <div className="flex w-full max-w-4xl bg-white dark:bg-zinc-800 rounded-lg shadow-lg overflow-hidden">
+        {/* Left Side: Title and Description Component */}
+        <TitleCard />
+        {/* Right Side: Login or Signup Form based on route */}
+        <div className="w-1/2 flex flex-col justify-center">
+          <Outlet />
+        </div>
+      </div>
     </div>
   );
 };
