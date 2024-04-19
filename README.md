@@ -6,18 +6,24 @@
 
 - Utilizing React Typescript, React Router, Tailwind CSS, Shadcn UI, Framer Motion, and Aceternity UI. This project provides a simplistic and modern look
 
+![SignUp](https://live.staticflickr.com/65535/53665681325_a91226281c.jpg)
+
+![Login](https://live.staticflickr.com/65535/53664353417_6acbfdf77a.jpg)
+
+![User Logged In](https://live.staticflickr.com/65535/53664353412_7cc1a7150b.jpg)
+
 ## Installation & Setup
 
-1. **Move into the client folder:**
-
-```
-cd Authorize-Users-project/$'\025'client
-```
-
-**Clone the Repo:**
+1.  **Clone the Repo:**
 
 ```
 git clone https://github.com/Castro19/Authorize-Users-project.git
+```
+
+2. **Move into the client folder:**
+
+```
+cd Authorize-Users-project/$'\025'client
 ```
 
 2. **Install Packages:**
